@@ -2,6 +2,7 @@ const MovimentRegister = require('../services/MovimentRegister');
 const FinanceRepository = require('../repositories/FinanceRepository');
 const MovimentListByUser = require('../services/MovimentListByUser');
 const MovimentShow = require('../services/MovimentShow');
+const MovimentRemove = require('../services/MovimentRemove');
 
 class MovimentController {
   async create(request, response) {
@@ -26,9 +27,17 @@ class MovimentController {
 
   async delete(request, response) {
     const idMoviment = request.params.id;
+    const user_id = request.user.id.sub;
 
-    // A sua atividade é finalizar essa funcionalidade.
-    return response.json(idMoviment);
+    const repository = new FinanceRepository();
+    const movimentRemove = new MovimentRemove(repository);
+    console.log(user_id);
+    const financeDelete = await movimentRemove.execute({
+      idMoviment,
+      user_id,
+    });
+
+    return response.json({ message: financeDelete });
   }
 
   async index(request, response) {
