@@ -4,18 +4,20 @@ class MovimentRemove {
   }
 
   async execute(data) {
-    const { idMoviment, user_id } = data;
+    const { id_moviment, user_id } = data;
+    const moviment = await this.financeRepository.movimentById(id_moviment);
+
+    if (!moviment) return { error: 'this is moviment does not exist' };
+
+    if (moviment.user_id !== user_id) {
+      return { error: 'do you no have permissiom' };
+    }
     try {
-      const moviment = await this.financeRepository.movimentRemove(
-        idMoviment,
-        user_id,
-      );
-      console.log(moviment);
-      if (!moviment.value)
-        return 'this moviment does not exist or does not belong to you';
-      return moviment;
-    } catch (err) {
+      await this.financeRepository.movimentRemove(id_moviment, user_id);
+
       return null;
+    } catch (err) {
+      return { erro: 'this operation could not be performed' };
     }
   }
 }

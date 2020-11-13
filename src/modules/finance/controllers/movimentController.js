@@ -31,13 +31,13 @@ class MovimentController {
 
     const repository = new FinanceRepository();
     const movimentRemove = new MovimentRemove(repository);
-    console.log(user_id);
-    const financeDelete = await movimentRemove.execute({
+    const movimentDelete = await movimentRemove.execute({
       idMoviment,
       user_id,
     });
+    if (movimentDelete) return response.status(400).json(movimentDelete);
 
-    return response.json({ message: financeDelete });
+    return response.status(200).send();
   }
 
   async index(request, response) {
